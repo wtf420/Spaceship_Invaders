@@ -26,71 +26,59 @@ namespace Assets.Scripts
         // Update is called once per frame
         void Update()
         {
-            PurgeDeletedObjects();
+            
         }
 
-        private void PurgeDeletedObjects()
+        private void Kill(Entity e)
         {
-            foreach (Entity e in EnemiesOrAsteroid.ToArray())
+            EnemiesOrAsteroid.Remove(e);
+            if (e is Asteroid)
             {
-                if (e.IsDeleted)
+                Asteroid asteroid = ((Asteroid)e);
+
+                asteroid.MyDestroy(EnemiesOrAsteroid);
+
+                switch (asteroid.level)
                 {
-                    EnemiesOrAsteroid.Remove(e);
+                    case Asteroid.Level.Large:
+                        HUD.Instance.Score += 3000;
+                        HUD.Instance.DisplayFloatingText("3000", e.transform.position);
+                        break;
 
-                    if (e.HP <= 0)
-                    {
+                    case Asteroid.Level.Medium:
+                        HUD.Instance.Score += 2000;
+                        HUD.Instance.DisplayFloatingText("2000", e.transform.position);
+                        break;
 
-                        if (e is Asteroid)
-                        {
-                            Asteroid asteroid = ((Asteroid)e);
-
-                            asteroid.MyDestroy(EnemiesOrAsteroid);
-
-                            switch (asteroid.level)
-                            {
-                                case Asteroid.Level.Large:
-                                    HUD.Instance.Score += 3000;
-                                    HUD.Instance.DisplayFloatingText("3000", e.transform.position);
-                                    break;
-
-                                case Asteroid.Level.Medium:
-                                    HUD.Instance.Score += 2000;
-                                    HUD.Instance.DisplayFloatingText("2000", e.transform.position);
-                                    break;
-
-                                default:
-                                    HUD.Instance.Score += 1000;
-                                    HUD.Instance.DisplayFloatingText("1000", e.transform.position);
-                                    break;
-                            }
-                        }
-                        else if (e is Enemy1)
-                        {
-                            HUD.Instance.Score += 1000;
-                            HUD.Instance.DisplayFloatingText("1000", e.transform.position);
-                        }
-                        else if (e is Enemy2)
-                        {
-                            HUD.Instance.Score += 2000;
-                            HUD.Instance.DisplayFloatingText("2000", e.transform.position);
-                        }
-                        else if (e is Enemy3)
-                        {
-                            HUD.Instance.Score += 5000;
-                            HUD.Instance.DisplayFloatingText("5000", e.transform.position);
-                        }
-                        else if (e is Boss)
-                        {
-                            HUD.Instance.Score += 50000;
-                            HUD.Instance.DisplayFloatingText("50000", e.transform.position);
-                        }
-
-                        ItemManager.Instance.RandomItem(e.transform.position);
-                    }
-
-                    e.Destructor();
+                    default:
+                        HUD.Instance.Score += 1000;
+                        HUD.Instance.DisplayFloatingText("1000", e.transform.position);
+                        break;
                 }
             }
+            else if (e is Enemy1)
+            {
+                HUD.Instance.Score += 1000;
+                HUD.Instance.DisplayFloatingText("1000", e.transform.position);
+            }
+            else if (e is Enemy2)
+            {
+                HUD.Instance.Score += 2000;
+                HUD.Instance.DisplayFloatingText("2000", e.transform.position);
+            }
+            else if (e is Enemy3)
+            {
+                HUD.Instance.Score += 5000;
+                HUD.Instance.DisplayFloatingText("5000", e.transform.position);
+            }
+            else if (e is Boss)
+            {
+                HUD.Instance.Score += 50000;
+                HUD.Instance.DisplayFloatingText("50000", e.transform.position);
+            }
+
+            ItemManager.Instance.RandomItem(e.transform.position);
+            Destroy(e.gameObject);
         }
 
         public IEnumerator Scenario()
@@ -175,14 +163,17 @@ namespace Assets.Scripts
                     {
                         Tentacle Instantiate_Enemy = Instantiate(enemySpawnInfo.entity, path.GetNodePosition(0), new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as Tentacle;
                         EnemiesOrAsteroid.Add(Instantiate_Enemy);
+                        Instantiate_Enemy.OnDeathEvent.AddListener(Kill);
                     } else
                     if ((enemySpawnInfo.entity as TentacleBoss) != null)
                     {
                         TentacleBoss Instantiate_Enemy = Instantiate(enemySpawnInfo.entity, path.GetNodePosition(0), new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as TentacleBoss;
                         EnemiesOrAsteroid.Add(Instantiate_Enemy);
+                        Instantiate_Enemy.OnDeathEvent.AddListener(Kill);
                         foreach (Tentacle t in Instantiate_Enemy.tentacles)
                         {
                             EnemiesOrAsteroid.Add(t);
+                            Instantiate_Enemy.OnDeathEvent.AddListener(Kill);
                         }
                     }
 
@@ -199,6 +190,7 @@ namespace Assets.Scripts
                     Instantiate_Enemy.path = path;
                     Instantiate_Enemy.OrbitPath = orbitPath;
                     EnemiesOrAsteroid.Add(Instantiate_Enemy);
+                    Instantiate_Enemy.OnDeathEvent.AddListener(Kill);
                     yield return new WaitForSeconds(enemySpawnInfo.delayBetweenSpawn);
                 }
             } else
@@ -212,11 +204,10 @@ namespace Assets.Scripts
                     Asteroid Instantiate_Asteroid = Instantiate(enemySpawnInfo.entity, position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as Asteroid;
                     Instantiate_Asteroid.path = path;
                     EnemiesOrAsteroid.Add(Instantiate_Asteroid);
+                    Instantiate_Asteroid.OnDeathEvent.AddListener(Kill);
                     yield return new WaitForSeconds(enemySpawnInfo.delayBetweenSpawn);
                 }
             }
-
-
         }
     }
 }

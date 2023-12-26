@@ -2,7 +2,13 @@
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Assets.Scripts;
+
+[System.Serializable]
+public class OnDeathEvent : UnityEvent<Entity>
+{
+}
 
 namespace Assets.Scripts
 {
@@ -21,6 +27,7 @@ namespace Assets.Scripts
         //public Variables.Skill_Effect isEffecting { get; set; }
 
         public Dictionary<StatusEffectTypes, StatusEffect> statusEffects;
+        public OnDeathEvent OnDeathEvent = new OnDeathEvent();
 
         bool isDeleted = false;
         public bool IsDeleted 
@@ -50,7 +57,14 @@ namespace Assets.Scripts
         {
             HP -= dame;
             if (HP <= 0)
+            {
+                OnDeathEvent.Invoke(this);
                 IsDeleted = true;
+                if (Explosion != null)
+                {
+                    Instantiate(Explosion, transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+                }
+            }
         }
 
         //public virtual void EffectTaken(float time, Variables.Skill_Effect effect)
@@ -78,15 +92,6 @@ namespace Assets.Scripts
 
         //    Debug.Log("End effect");
         //}
-
-        public void Destructor()
-        {
-            if (Explosion != null)
-            {
-                Instantiate(Explosion, transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
-            }
-            Destroy(gameObject);
-        }
 
     }
 }

@@ -5,9 +5,6 @@ using Assets.Scripts;
 
 public class Enemy1 : Enemy
 {
-    float DeltaTime;
-    float maxTime;
-
     void Awake()
     {
         this.Init();
@@ -19,42 +16,11 @@ public class Enemy1 : Enemy
         nextDestinationNode = 1;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (HP <= 0)
-            IsDeleted = true;
-
-        if (DeltaTime < maxTime)
-            DeltaTime += Time.deltaTime;
-        else
-        {
-            DeltaTime = 0;
-            Shooting();
-            maxTime = Random.Range(1, MaxTimeRandom);
-        }
-
-        if (nextDestinationNode < path.NodeCount())
-        {
-            Movement();
-        }
-        else if(OrbitPath != null)
-        {
-            if (nextNode < OrbitPath.NodeCount())
-                OrbitMovement();
-            else
-                nextNode = 0;
-        }
-        UpdateStatusEffect();
-    }
-
-    private void Shooting()
+    protected override void Shooting()
     {
         Vector2 position = new Vector2(Body.position.x, Body.position.y - Variables.Adjust);
         Vector2 direction = new Vector2(0, -1);
         Shoot(position, direction);
 
     }
-
-
 }

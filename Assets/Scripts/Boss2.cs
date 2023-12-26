@@ -35,6 +35,7 @@ namespace Assets.Scripts
             ShootingDeltaTime = 0;
             ShootingMaxTime = 1.5f;
         }
+        
         // Update is called once per frame
         void Update()
         {

@@ -51,8 +51,6 @@ namespace Assets.Scripts
             UpdateStatusEffect();
         }
 
-
-
         protected override void Action()
         {
             Vector2 position = Body.position;
@@ -99,8 +97,6 @@ namespace Assets.Scripts
                         break;
                 }
             }
-
         }
-
     }
 }

@@ -13,10 +13,6 @@ namespace Assets.Scripts
 
         protected float TotalTime = 0;
         protected float BurstTime = 0;
-        
-
-        protected float DeltaTime;
-        protected float maxTime;
 
         void Awake()
         {

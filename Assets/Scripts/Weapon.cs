@@ -40,7 +40,7 @@ public class Weapon : MonoBehaviour
         DelayTimer = 0.0f;
         //Debug.Log(DelayBetweenShots.ToString());
         //Debug.Log("Weapon shoot");
-        Level = Assets.Scripts.DataPersistence.DataPersistenceManager.Instance.gameData.LevelBullet;
+        //Level = Assets.Scripts.DataPersistence.DataPersistenceManager.Instance.gameData.LevelBullet;
     }
 
     void Update()

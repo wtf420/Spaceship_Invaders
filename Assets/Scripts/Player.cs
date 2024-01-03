@@ -240,41 +240,49 @@ namespace Assets.Scripts
         {
             if (Input.GetKeyDown(KeyCode.Space))
                 weapons[currentWeapon].Trigger();
+            if (Input.GetKeyDown(KeyCode.BackQuote))
+            {
+                GameManager.isAdmin = true;
+                HUD.Instance.DisplayFloatingText("Cheatmode Enabled", Body.position);
+            }
 
             DictionarySkill skill = null;
-            
-            if (Input.GetKeyDown(KeyCode.Q))
+
+            if (GameManager.isAdmin)
             {
-                skill = playerSkill.Find(x => x.key == KeyCode.Q);
-            }
-            else if (Input.GetKeyDown(KeyCode.W))
-            {
-                skill = playerSkill.Find(x => x.key == KeyCode.W);
-            }
-            else if (Input.GetKeyDown(KeyCode.E))
-            {
-                skill = playerSkill.Find(x => x.key == KeyCode.E);
-            }
-            else if (Input.GetKeyDown(KeyCode.R))
-            {
-                skill = playerSkill.Find(x => x.key == KeyCode.R);
-            }
-            else if(Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                currentWeapon++;
-                if (currentWeapon == weapons.Count)
-                    currentWeapon = 0;
-            }
-            else if(Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                currentWeapon--;
-                if (currentWeapon < 0)
-                    currentWeapon = weapons.Count - 1;
-            }
-            else if(Input.GetKeyDown(KeyCode.U))
-            {
-                HUD.Instance.Life++;
-                HUD.Instance.DisplayFloatingText("Life +1", Body.position);
+                if (Input.GetKeyDown(KeyCode.Q))
+                {
+                    skill = playerSkill.Find(x => x.key == KeyCode.Q);
+                }
+                else if (Input.GetKeyDown(KeyCode.W))
+                {
+                    skill = playerSkill.Find(x => x.key == KeyCode.W);
+                }
+                else if (Input.GetKeyDown(KeyCode.E))
+                {
+                    skill = playerSkill.Find(x => x.key == KeyCode.E);
+                }
+                else if (Input.GetKeyDown(KeyCode.R))
+                {
+                    skill = playerSkill.Find(x => x.key == KeyCode.R);
+                }
+                else if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    currentWeapon++;
+                    if (currentWeapon == weapons.Count)
+                        currentWeapon = 0;
+                }
+                else if (Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    currentWeapon--;
+                    if (currentWeapon < 0)
+                        currentWeapon = weapons.Count - 1;
+                }
+                else if (Input.GetKeyDown(KeyCode.U))
+                {
+                    HUD.Instance.Life++;
+                    HUD.Instance.DisplayFloatingText("Life +1", Body.position);
+                }
             }
 
             if (skill != null && fuel.Contain >= 2)

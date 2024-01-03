@@ -12,7 +12,6 @@ public class GameManager : MonoBehaviour
     }
 
     public float Sensitivity;
-    public static bool isAdmin = false;
 
     private void Awake()
     {

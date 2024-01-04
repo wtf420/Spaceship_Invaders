@@ -34,32 +34,31 @@ namespace Assets.Scripts
         protected IEnumerator CircleShooting(float delayTime, Vector2 position, int quantity)
         {
             yield return new WaitForSeconds(delayTime);
-            SkillManager.Instance.CircleShoot(Variables.ByEnemy, quantity, position, new Vector2(0, -1));
-
+            BeautifulShapeSkill.ActivateByEntity(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.CircleShooting)]);
         }
 
         protected IEnumerator DivineDeparture(float delayTime, Vector2 position)
         {
             yield return new WaitForSeconds(delayTime);
-            SkillManager.Instance.DivineDeparture(Variables.ByEnemy, position, new Vector2(0, -1));
+            Skill.ActivateByEntity(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.DivineDeparture)]);
         }
 
         protected IEnumerator EnergyWave(float delayTime, Vector2 position)
         {
             yield return new WaitForSeconds(delayTime);
-            SkillManager.Instance.EnergyWave(Variables.ByEnemy, position, new Vector2(0, -1));
+            Skill.ActivateByEntity(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.EnergyWave)]);
         }
 
         protected IEnumerator ElectricShoot(float delayTime, Vector2 position)
         {
             yield return new WaitForSeconds(delayTime);
-            SkillManager.Instance.ElectricShooting(Variables.ByEnemy, position, new Vector2(0, -1));
+            Skill.ActivateByEntity(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.ElectricShooting)]);
         }
 
         protected IEnumerator SectorShoot(float delayTime, Vector2 position, int quantity)
         {
             yield return new WaitForSeconds(delayTime);
-            SkillManager.Instance.SectorShooting(Variables.ByEnemy, quantity, position, new Vector2(0, -1));
+            BeautifulShapeSkill.ActivateByEntity(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.SectorShooting)]);
         }
 
     }

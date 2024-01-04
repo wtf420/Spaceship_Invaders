@@ -118,7 +118,6 @@ namespace Assets.Scripts
             else
             {
                 int rd = Random.Range(0, Skills.Count);
-                rd = 3;
 
                 switch (Skills[rd])
                 {

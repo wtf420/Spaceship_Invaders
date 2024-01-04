@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.DataPersistence;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -38,7 +39,7 @@ namespace Assets.Scripts
 
         }
 
-        public void Init(int type, int damage, Vector2 direction)
+        public virtual void Init(int type, int damage, Vector2 direction)
         {
             Type = type;
             Damage = damage;
@@ -52,36 +53,16 @@ namespace Assets.Scripts
             //Debug.Log("Angle: " + angle);
         }
 
-        public void Init(int type, int damage, Vector2 direction, int duration)
+        public virtual void Init(int type, int damage, Vector2 direction, float duration)
         {
-            Type = type;
-            Damage = damage;
+            Init(type, damage, direction);
             Duration = duration;
-
-            this.Direction = direction;
-            float angle = Vector2.Angle(direction, new Vector2(1, 0));
-            if (direction.y < 0)
-                this.transform.rotation = Quaternion.AngleAxis(angle, -Vector3.forward);
-            else
-                this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            //Debug.Log("Angle: " + angle);
         }
 
-        public void Init(int type, int damage, Vector2 direction, SkillEffect effect, int duration)
+        public virtual void Init(int type, int damage, Vector2 direction, float duration, SkillEffect effect)
         {
-            Type = type;
-            Damage = damage;
-
-            this.Direction = direction;
-            float angle = Vector2.Angle(direction, new Vector2(1, 0));
-            if (direction.y < 0)
-                this.transform.rotation = Quaternion.AngleAxis(angle, -Vector3.forward);
-            else
-                this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
+            Init(type, damage, direction, duration);
             Effect = effect;
-            Duration = duration;
-            //Debug.Log("Angle: " + angle);
         }
 
         public void SetParent(GameObject parent)
@@ -156,6 +137,17 @@ namespace Assets.Scripts
 
             }
 
+        }
+
+        public static void ActivateByPlayer(Player player, Skill skill) { 
+            Skill Instantiate_Skill = Instantiate(skill, player.GetPosition(), new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+            Instantiate_Skill.Init(Variables.ByPlayer, skill.Damage, new Vector2(0, 1), skill.Duration, skill.Effect);
+        }
+
+        public static void ActivateByEntity(Entity entity, Skill skill)
+        {
+            Skill Instantiate_Skill = Instantiate(skill, entity.GetPosition(), new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+            Instantiate_Skill.Init(Variables.ByEnemy, skill.Damage, new Vector2(0, -1), skill.Duration, skill.Effect);
         }
 
         public virtual void HandleDestroy()

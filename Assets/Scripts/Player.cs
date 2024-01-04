@@ -106,7 +106,8 @@ namespace Assets.Scripts
         public IEnumerator SetInvincible(float duration)
         {
             invincible = true; 
-            SkillManager.Instance.Invincible(Variables.ByPlayer, Body.position, new Vector2(0, 1), gameObject);
+            //SkillManager.Instance.Invincible(Variables.ByPlayer, Body.position, new Vector2(0, 1), gameObject);
+            Skill.ActivateByPlayer(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.Invincible)]);
             yield return new WaitForSeconds(duration);
             invincible = false;
         }
@@ -291,15 +292,18 @@ namespace Assets.Scripts
             switch (skill)
             {
                 case Variables.Skill_Type.CircleShooting:
-                    SkillManager.Instance.CircleShoot(Variables.ByPlayer, 10, position, new Vector2(0, -1));
+                    //SkillManager.Instance.CircleShoot(Variables.ByPlayer, 10, position, new Vector2(0, -1));
+                    BeautifulShapeSkill.ActivateByPlayer(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(skill)]);
                     break;
 
                 case Variables.Skill_Type.DivineDeparture:
-                    SkillManager.Instance.DivineDeparture(Variables.ByPlayer, position, new Vector2(0, 1));
+                    //SkillManager.Instance.DivineDeparture(Variables.ByPlayer, position, new Vector2(0, 1));
+                    Skill.ActivateByPlayer(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(skill)]);
                     break;
                     
                 case Variables.Skill_Type.EnergyWave:
-                    SkillManager.Instance.EnergyWave(Variables.ByPlayer, position, new Vector2(0, 1));
+                    //SkillManager.Instance.EnergyWave(Variables.ByPlayer, position, new Vector2(0, 1));
+                    Skill.ActivateByPlayer(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(skill)]);
                     break;
 
                 case Variables.Skill_Type.Invincible:
@@ -308,11 +312,14 @@ namespace Assets.Scripts
                     break;
 
                 case Variables.Skill_Type.ElectricShooting:
-                    SkillManager.Instance.ElectricShooting(Variables.ByPlayer, position, new Vector2(0, 1));
+                    //SkillManager.Instance.ElectricShooting(Variables.ByPlayer, position, new Vector2(0, 1));
+                    Skill.ActivateByPlayer(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(skill)]);
+
                     break;
 
                 case Variables.Skill_Type.SectorShooting:
-                    SkillManager.Instance.SectorShooting(Variables.ByPlayer, 5, position, new Vector2(0, 1));
+                    //SkillManager.Instance.SectorShooting(Variables.ByPlayer, 5, position, new Vector2(0, 1));
+                    Skill.ActivateByPlayer(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(skill)]);
                     break;
             }
         }

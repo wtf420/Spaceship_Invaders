@@ -67,6 +67,11 @@ namespace Assets.Scripts
             }
         }
 
+        public Vector2 GetPosition()
+        {
+            return Body.position;
+        }
+
         //public virtual void EffectTaken(float time, Variables.Skill_Effect effect)
         //{
         //    isEffecting = effect;

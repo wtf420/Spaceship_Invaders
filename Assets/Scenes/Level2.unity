@@ -1737,13 +1737,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waves:
+  - {fileID: 1549467201}
   - {fileID: 1708942866}
   - {fileID: 175135206}
   - {fileID: 400821962}
   - {fileID: 469715602}
   - {fileID: 133298180}
   - {fileID: 536723583}
-  - {fileID: 1549467201}
   pauseMenuScript: {fileID: 287876541}
   waveDoneSpawning: 0
 --- !u!4 &1482211341

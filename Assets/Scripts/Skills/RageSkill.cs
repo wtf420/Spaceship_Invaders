@@ -13,7 +13,7 @@ namespace Assets.Scripts
 
         public override void HandleDestroy()
         {
-            SkillManager.Instance.EnergyWave(Type, gameObject.transform.position, Direction);
+            Skill.ActivateByEntity(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.EnergyWave)]);
 
             Destroy(gameObject);
         }

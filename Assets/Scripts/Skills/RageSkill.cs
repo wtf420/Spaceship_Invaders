@@ -13,8 +13,10 @@ namespace Assets.Scripts
 
         public override void HandleDestroy()
         {
-            Skill.ActivateByEntity(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.EnergyWave)]);
-
+            if (this.Type == Variables.ByPlayer)
+                Skill.ActivateByPlayer(GameObject.FindObjectOfType<Player>(), SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.EnergyWave)]);
+            else
+                Skill.ActivateByEntity(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.EnergyWave)]);
             Destroy(gameObject);
         }
         

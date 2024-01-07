@@ -133,10 +133,14 @@ namespace Assets.Scripts
                         }
                         break;
                 }
-
-
             }
 
+            if (this.name.Contains("EnergyWave"))
+            {
+                Bullet bullet = collision.GetComponent<Bullet>();
+                if (bullet && bullet.Type != this.Type)
+                    Destroy(collision.gameObject);
+            }
         }
 
         public static void ActivateByPlayer(Player player, Skill skill) { 

@@ -47,6 +47,8 @@ namespace Assets.Scripts
         private float SpeedCap;
         private BoxCollider2D Collider;
 
+        private VariableJoystick variableJoystick;
+
         //float halfHeight;
         //float halfWidth;
 
@@ -54,6 +56,7 @@ namespace Assets.Scripts
         {
             Body = GetComponent<Rigidbody2D>();
             Collider = GetComponent<BoxCollider2D>();
+            variableJoystick = GetComponentInChildren<VariableJoystick>();
             lastFrameMousePosition = Body.position;
 
             Body.isKinematic = false; // turn on OncollisionEnter2d
@@ -183,8 +186,15 @@ namespace Assets.Scripts
         void MouseController2()
         {
             Vector3 mousePosition = Body.position;
-            mousePosition.x += Input.GetAxis("Mouse X") * sensitivity * SpeedCap * Time.deltaTime * Ratio;
-            mousePosition.y += Input.GetAxis("Mouse Y") * sensitivity * SpeedCap * Time.deltaTime * Ratio;
+            if (variableJoystick != null)
+            {
+                mousePosition.x += variableJoystick.Horizontal * sensitivity * SpeedCap * Time.deltaTime * Ratio;
+                mousePosition.y += variableJoystick.Vertical * sensitivity * SpeedCap * Time.deltaTime * Ratio;
+            } else
+            {
+                mousePosition.x += Input.GetAxis("Mouse X") * sensitivity * SpeedCap * Time.deltaTime * Ratio;
+                mousePosition.y += Input.GetAxis("Mouse Y") * sensitivity * SpeedCap * Time.deltaTime * Ratio;
+            }
 
 
             // Adding distance to handle Fuel
@@ -211,30 +221,36 @@ namespace Assets.Scripts
 
             lastFrameMousePosition = Body.position;
 
-            //Debug.Log(lastFrameMousePosition);
 
-            // pressed mouse left // Spaceship shooting
-            if (Input.GetMouseButtonDown(0))
+            if (variableJoystick == null)
             {
-                weapons[currentWeapon].Trigger();
-            }
-            else if (Input.GetMouseButtonDown(1)) // hack level weapon
-            {
-                WeaponLevelUp(1);
-                //WeaponStateBar.Instance.Level = Weapon.Level;
-            }
-            else if (Input.GetMouseButtonDown(2))
-            {
-                currentWeapon++;
-                if (currentWeapon == weapons.Count)
-                    currentWeapon = 0;
+                //Debug.Log(lastFrameMousePosition);
 
-                //WeaponStateBar.Instance.Type = currentWeapon;
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Shoot();
+                }
+                else if (Input.GetMouseButtonDown(1)) // hack level weapon
+                {
+                    SwitchWeapon();
+                    //WeaponStateBar.Instance.Level = Weapon.Level;
+                }
             }
-
 
             Cursor.visible = false; // invisible cursor
             Cursor.lockState = CursorLockMode.Confined;// block cursor into Game screen
+        }
+
+        public void Shoot()
+        {
+            weapons[currentWeapon].Trigger();
+        }
+
+        public void SwitchWeapon()
+        {
+            currentWeapon++;
+            if (currentWeapon == weapons.Count)
+                currentWeapon = 0;
         }
 
         void KeyboardController()
@@ -243,7 +259,13 @@ namespace Assets.Scripts
                 weapons[currentWeapon].Trigger();
 
             DictionarySkill skill = null;
-            
+
+            if (Input.GetKeyDown(KeyCode.BackQuote))
+            {
+                GameManager.isAdmin = true;
+                HUD.Instance.DisplayFloatingText("Cheatmode Enabled", Body.position);
+            }
+
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 skill = playerSkill.Find(x => x.key == KeyCode.Q);
@@ -260,22 +282,27 @@ namespace Assets.Scripts
             {
                 skill = playerSkill.Find(x => x.key == KeyCode.R);
             }
-            else if(Input.GetKeyDown(KeyCode.UpArrow))
+            else if (GameManager.isAdmin)
             {
-                currentWeapon++;
-                if (currentWeapon == weapons.Count)
-                    currentWeapon = 0;
-            }
-            else if(Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                currentWeapon--;
-                if (currentWeapon < 0)
-                    currentWeapon = weapons.Count - 1;
-            }
-            else if(Input.GetKeyDown(KeyCode.U))
-            {
-                HUD.Instance.Life++;
-                HUD.Instance.DisplayFloatingText("Life +1", Body.position);
+                if (Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    WeaponLevelUp(1);
+                }
+                else if (Input.GetKeyDown(KeyCode.DownArrow))
+                {
+                    WeaponLevelUp(-1);
+                }
+                else if (Input.GetKeyDown(KeyCode.U))
+                {
+                    HUD.Instance.Life++;
+                    HUD.Instance.DisplayFloatingText("Life +1", Body.position);
+                }
+                else if (Input.GetKeyDown(KeyCode.C))
+                {
+                    HUD.Instance.Coin++;
+                }
+                else if(Input.GetKeyDown(KeyCode.N))
+                    GameManager.Instance.NextLevel();
             }
 
             if (skill != null && fuel.Contain >= 2)
@@ -284,6 +311,16 @@ namespace Assets.Scripts
                 ActiveSkill(skill.skill);
             }
 
+            if (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape))
+            {
+                PauseOrResumeGame();
+            }
+        }
+
+        public void PauseOrResumeGame()
+        {
+            PauseMenuScript p = GameObject.FindObjectOfType<PauseMenuScript>();
+            p.PauseOrResumeGame();
         }
 
         void ActiveSkill(Variables.Skill_Type skill)

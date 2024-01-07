@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     }
 
     public float Sensitivity;
+    public static bool isAdmin = false;
 
     private void Awake()
     {
@@ -24,12 +25,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         Sensitivity = 1;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.N))
-            NextLevel();
     }
 
     public void MainMenu()

@@ -23,43 +23,27 @@ public class PauseMenuScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    public void PauseOrResumeGame()
     {
-        if(Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape))
+        GameObject winning = PauseMenuCanvas.Find(e => e.name == "WinningScene");
+        // player cannot pause while winning scene showing.
+        if (winning == null || (winning != null && winning.activeSelf == false))
         {
-            GameObject winning = PauseMenuCanvas.Find(e => e.name == "WinningScene");
-            // player cannot pause while winning scene showing.
-            if(winning == null ||(winning != null && winning.activeSelf == false)) 
+            switch (State)
             {
-                switch (State)
-                {
-                    case false:
-                        Show();
-                        State = true;
-                        Cursor.visible = true; // show cursor
-                        player.GamePaused();
-                        break;
+                case false:
+                    Show();
+                    State = true;
+                    Cursor.visible = true; // show cursor
+                    player.GamePaused();
+                    break;
 
-                    case true:
-                        Hide();
-                        State = false;
-                        Cursor.visible = false;
-                        player.GameResume();
-                        break;
-                }
-            }
-            
-        }
-        else if(Input.GetKeyDown(KeyCode.C))
-        {
-            HUD.Instance.Coin++;
-        }
-        else if (Input.GetKeyDown(KeyCode.U))
-        {
-            if(HUD.Instance.Life <= 0)
-            {
-                HUD.Instance.Life++;
-                player.gameObject.SetActive(true);
+                case true:
+                    Hide();
+                    State = false;
+                    Cursor.visible = false;
+                    player.GameResume();
+                    break;
             }
         }
     }

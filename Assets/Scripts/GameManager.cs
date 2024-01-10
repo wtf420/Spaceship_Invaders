@@ -12,17 +12,15 @@ public class GameManager : MonoBehaviour
     }
 
     public float Sensitivity;
-    public static bool isAdmin = false;
 
     private void Awake()
     {
-        // this will exist throughout all scenes
-        DontDestroyOnLoad(this);
-
         if (instance == null)
             instance = this;
         else
             Destroy(gameObject);
+        // this will exist throughout all scenes
+        DontDestroyOnLoad(this);
 
         Sensitivity = 1;
     }

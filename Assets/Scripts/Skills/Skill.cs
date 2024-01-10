@@ -143,15 +143,17 @@ namespace Assets.Scripts
             }
         }
 
-        public static void ActivateByPlayer(Player player, Skill skill) { 
+        public static Skill ActivateByPlayer(Player player, Skill skill) { 
             Skill Instantiate_Skill = Instantiate(skill, player.GetPosition(), new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
             Instantiate_Skill.Init(Variables.ByPlayer, skill.Damage, new Vector2(0, 1), skill.Duration, skill.Effect);
+            return Instantiate_Skill;
         }
 
-        public static void ActivateByEntity(Entity entity, Skill skill)
+        public static Skill ActivateByEntity(Entity entity, Skill skill)
         {
             Skill Instantiate_Skill = Instantiate(skill, entity.GetPosition(), new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
             Instantiate_Skill.Init(Variables.ByEnemy, skill.Damage, new Vector2(0, -1), skill.Duration, skill.Effect);
+            return Instantiate_Skill;
         }
 
         public virtual void HandleDestroy()

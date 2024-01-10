@@ -27,6 +27,13 @@ namespace Assets.Scripts
         [SerializeField]
         Exhaust exhaust;
 
+        static Player instance;
+        public static Player Instance
+        {
+            get { return instance; }
+            private set { instance = value; }
+        }
+
         public Animator animator;
         private Vector2 Velocity;
 
@@ -40,7 +47,8 @@ namespace Assets.Scripts
         public float sensitivity = 1.0f;
 
         public bool invincible = false;
-        private bool controlEnable = true;    
+        private bool controlEnable = true;
+        private Cheats cheats;
 
         public float MaximumSpeed;
         public float MinimumSpeed;
@@ -54,9 +62,13 @@ namespace Assets.Scripts
 
         private void Start()
         {
+            if (instance != null) Destroy(instance);
+            instance = this;
+
             Body = GetComponent<Rigidbody2D>();
             Collider = GetComponent<BoxCollider2D>();
             variableJoystick = GetComponentInChildren<VariableJoystick>();
+            cheats = GetComponent<Cheats>();
             lastFrameMousePosition = Body.position;
 
             Body.isKinematic = false; // turn on OncollisionEnter2d
@@ -108,9 +120,10 @@ namespace Assets.Scripts
 
         public IEnumerator SetInvincible(float duration)
         {
-            invincible = true; 
+            invincible = true;
             //SkillManager.Instance.Invincible(Variables.ByPlayer, Body.position, new Vector2(0, 1), gameObject);
-            Skill.ActivateByPlayer(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.Invincible)]);
+            Skill skill = Skill.ActivateByPlayer(this, SkillManager.Instance.Skills[SkillManager.Instance.getIndex(Variables.Skill_Type.Invincible)]);
+            skill.SetParent(this.gameObject);
             yield return new WaitForSeconds(duration);
             invincible = false;
         }
@@ -260,10 +273,10 @@ namespace Assets.Scripts
 
             DictionarySkill skill = null;
 
-            if (Input.GetKeyDown(KeyCode.BackQuote))
+            if (Input.GetKeyDown(KeyCode.BackQuote) && cheats != null && !cheats.Activated)
             {
-                GameManager.isAdmin = true;
                 HUD.Instance.DisplayFloatingText("Cheatmode Enabled", Body.position);
+                cheats.Activated = true;
             }
 
             if (Input.GetKeyDown(KeyCode.Q))
@@ -281,28 +294,6 @@ namespace Assets.Scripts
             else if (Input.GetKeyDown(KeyCode.R))
             {
                 skill = playerSkill.Find(x => x.key == KeyCode.R);
-            }
-            else if (GameManager.isAdmin)
-            {
-                if (Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    WeaponLevelUp(1);
-                }
-                else if (Input.GetKeyDown(KeyCode.DownArrow))
-                {
-                    WeaponLevelUp(-1);
-                }
-                else if (Input.GetKeyDown(KeyCode.U))
-                {
-                    HUD.Instance.Life++;
-                    HUD.Instance.DisplayFloatingText("Life +1", Body.position);
-                }
-                else if (Input.GetKeyDown(KeyCode.C))
-                {
-                    HUD.Instance.Coin++;
-                }
-                else if(Input.GetKeyDown(KeyCode.N))
-                    GameManager.Instance.NextLevel();
             }
 
             if (skill != null && fuel.Contain >= 2)
@@ -442,7 +433,7 @@ namespace Assets.Scripts
             exhaust.SetSmokeState(state);
         }
 
-        private void WeaponLevelUp(int amount)
+        public void WeaponLevelUp(int amount)
         {
             Weapon.Level += amount;
             Weapon.Level = Mathf.Clamp(Weapon.Level, 1, 3);

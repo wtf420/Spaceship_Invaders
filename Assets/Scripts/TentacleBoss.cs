@@ -29,9 +29,8 @@ public class TentacleBoss : Enemy
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(tentacles.Count.ToString());
         if (HP <= 0 || TentacleCheck() == 0)
-            IsDeleted = true;
+            Kill();
         UpdateStatusEffect();
     }
 

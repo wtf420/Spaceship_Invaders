@@ -73,7 +73,7 @@ public class Tentacle : Entity
 
         if (HP <= 0)
         {
-            IsDeleted = true;
+            Destroy(gameObject);
         }
 
         if (DeltaTime < maxTime)

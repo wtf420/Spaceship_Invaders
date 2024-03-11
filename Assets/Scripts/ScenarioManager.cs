@@ -15,7 +15,7 @@ namespace Assets.Scripts
         [SerializeField]
         bool waveDoneSpawning;
 
-        List<Entity> EnemiesOrAsteroid = new List<Entity>();
+        [SerializeField] List<Entity> EnemiesOrAsteroid = new List<Entity>();
 
         // Start is called before the first frame update
         void Start()
@@ -36,7 +36,10 @@ namespace Assets.Scripts
             {
                 Asteroid asteroid = ((Asteroid)e);
 
-                asteroid.MyDestroy(EnemiesOrAsteroid);
+                if (asteroid.HP <= 0)
+                {
+                    asteroid.MyDestroy(EnemiesOrAsteroid);
+                }
 
                 switch (asteroid.level)
                 {
@@ -170,11 +173,6 @@ namespace Assets.Scripts
                         TentacleBoss Instantiate_Enemy = Instantiate(enemySpawnInfo.entity, path.GetNodePosition(0), new Quaternion(0.0f, 0.0f, 0.0f, 0.0f)) as TentacleBoss;
                         EnemiesOrAsteroid.Add(Instantiate_Enemy);
                         Instantiate_Enemy.OnDeathEvent.AddListener(Kill);
-                        foreach (Tentacle t in Instantiate_Enemy.tentacles)
-                        {
-                            EnemiesOrAsteroid.Add(t);
-                            Instantiate_Enemy.OnDeathEvent.AddListener(Kill);
-                        }
                     }
 
                     yield return new WaitForSeconds(enemySpawnInfo.delayBetweenSpawn);

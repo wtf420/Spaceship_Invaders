@@ -56,7 +56,7 @@ namespace Assets.Scripts
             if (Mathf.Pow(Vector3.Distance(Body.position, path.GetNodePosition(0)), 2) >
                 Mathf.Pow(Vector3.Distance(path.GetNodePosition(1), path.GetNodePosition(0)), 2)
                 + Mathf.Pow(Vector3.Distance(Body.position, path.GetNodePosition(1)), 2))
-                IsDeleted = true;
+                Kill();
             
             Vector2 direction = path.GetNodePosition(1) - path.GetNodePosition(0);
 

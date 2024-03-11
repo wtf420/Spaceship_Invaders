@@ -36,6 +36,8 @@ namespace Assets.Scripts
 
         public Animator animator;
         private Vector2 Velocity;
+        private Vector2 TopRightCorner;
+        private Vector2 BottomLeftCorner;
 
         public PauseMenuScript pauseMenu;
         private bool paused = false;
@@ -71,11 +73,14 @@ namespace Assets.Scripts
             cheats = GetComponent<Cheats>();
             lastFrameMousePosition = Body.position;
 
+            TopRightCorner = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height,0));
+            BottomLeftCorner = Camera.main.ScreenToWorldPoint(new Vector3(0,0,0));
+
             Body.isKinematic = false; // turn on OncollisionEnter2d
             Body.gravityScale = 0.0f;
 
-            //halfHeight = Variables.ScreenHeight / 2;
-            //halfWidth = Variables.ScreenWidth / 2;
+            //halfHeight = stageDimensions.y / 2;
+            //halfWidth = stageDimensions.x / 2;
             currentWeapon = 0;
 
             mainCamera = Camera.main;
@@ -83,7 +88,7 @@ namespace Assets.Scripts
 
             HP = Variables.PlayerHPDefault;
 
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.Locked;
             animator.SetTrigger("Spawn");
             StartCoroutine(SetInvincible(3.0f));
         }
@@ -224,11 +229,11 @@ namespace Assets.Scripts
             // limit it on main Screen
             Body.position = new Vector3(
                 Mathf.Clamp(Body.position.x, 
-                            -Variables.ScreenWidth / 2 + Collider.size.x / 2,
-                             Variables.ScreenWidth / 2 - Collider.size.x / 2),
+                            BottomLeftCorner.x,
+                             TopRightCorner.x),
                 Mathf.Clamp(Body.position.y,
-                             -Variables.ScreenHeight / 2 + Collider.size.y / 2,
-                              Variables.ScreenHeight / 2 - Collider.size.y / 2),
+                             BottomLeftCorner.y,
+                              TopRightCorner.y),
                 0f
             );
 
@@ -251,7 +256,7 @@ namespace Assets.Scripts
             }
 
             Cursor.visible = false; // invisible cursor
-            Cursor.lockState = CursorLockMode.Confined;// block cursor into Game screen
+            Cursor.lockState = CursorLockMode.Locked;// block cursor into Game screen
         }
 
         public void Shoot()

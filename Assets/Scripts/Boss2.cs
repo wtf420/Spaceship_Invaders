@@ -109,7 +109,7 @@ namespace Assets.Scripts
         {
             Vector2 position = Body.position;
 
-            if (HP / maxHP < 0.1)
+            if (HP / maxHP < 0.3)
             {
                 TotalTime = 0.2f;
                 LaserFire();

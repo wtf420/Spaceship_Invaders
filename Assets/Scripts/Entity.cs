@@ -67,6 +67,16 @@ namespace Assets.Scripts
             }
         }
 
+        public void Kill()
+        {
+            OnDeathEvent.Invoke(this);
+                IsDeleted = true;
+                if (Explosion != null)
+                {
+                    Instantiate(Explosion, transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+                }
+        }
+
         public Vector2 GetPosition()
         {
             return Body.position;
